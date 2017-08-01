@@ -1,0 +1,13 @@
+version: '2.0'
+services:
+  nginx_test:
+    links:
+      - lineup
+    build: '.'
+    ports:
+      - '80:80'
+    environment:
+      - PHOVEA_APP_LINEUP=LineUp;lineup;lineup
+      - PHOVEA_FORWARD_LINEUP=LineUp;lineup.caleydo.org;www.caleydo.org/tools/lineup
+  lineup:
+    image: nginx:latest

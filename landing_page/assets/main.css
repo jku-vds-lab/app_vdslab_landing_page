@@ -1,0 +1,387 @@
+body {
+  font-family: Yantramanav, Helvetica, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  font-size: 16px;
+  text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h5 {
+  font-family: Yantramanav, Helvetica, sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  padding-bottom: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  display: inline-block;
+  font-size: 2.3em;
+  margin: 25px auto;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */
+}
+
+h1 img {
+  margin-right: 5px;
+  position: relative;
+  top: 7px;
+}
+
+input[type=text], input[type=search], textarea {
+  -webkit-transition: all 0.30s ease-in-out;
+  -moz-transition: all 0.30s ease-in-out;
+  -ms-transition: all 0.30s ease-in-out;
+  -o-transition: all 0.30s ease-in-out;
+  outline: none;
+  border: 1px solid #ddd;
+}
+
+input[type=text]:focus, input[type=search]:focus, textarea:focus {
+  box-shadow: 0 0 5px #999;
+  border: 1px solid #999;
+}
+
+#search {
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  width: 100%;
+  font-size: 1em;
+  font-family: Yantramanav, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
+.keyboard-navigation-hint {
+  display: flex;
+  justify-content: flex-end;
+  margin: 5px 0 25px;
+  font-size: 0.7em;
+  color: #999;
+}
+
+.keyboard-navigation-hint span {
+  margin: 0 0.5em;
+}
+
+ul.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  justify-items: stretch;
+  justify-content: stretch;
+  align-content: stretch;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 660px) {
+  ul.list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  ul.list {
+    grid-template-columns: 1fr;
+  }
+}
+
+ul.list.loading,
+ul.list.loading-error,
+ul.list.nothing-found {
+  grid-template-columns: 1fr;
+}
+
+ul.list.loading:after,
+ul.list.loading-error:after,
+ul.list.nothing-found:after {
+  margin: 50px 0;
+  font-size: 1.3em;
+  font-weight: 300;
+  color: #999;
+}
+
+ul.list.loading:after {
+  content: "Loading apps...";
+}
+
+ul.list.loading-error:after {
+  color: #ee2329;
+  content: "An error occured while loading the app list!";
+}
+
+ul.list.nothing-found:after {
+  content: "Your search did not match any apps.";
+}
+
+ul.list li {
+  display: flex;
+  position: relative;
+  font-size: 90%;
+}
+
+ul.list li .screenshot {
+  background-color: #ddd;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 25%;
+  background-image: url(caleydo_c.svg);
+  transition: background 0.2s ease-in-out;
+  width: 100%;
+  height: 150px;
+  opacity: 0.5;
+}
+
+ul.list li .screenshot.is-set {
+  background-size: 100%;
+  opacity: 1;
+}
+
+ul.list li .name {
+  display: block;
+  font-weight: 500;
+  font-size: 150%;
+}
+
+ul.list li .description {
+  flex: 1;
+  color: #999;
+  transition: color 0.2s ease-in-out;
+}
+
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 0;
+  }
+}
+
+ul.list li.loading .description {
+  background-image: repeating-linear-gradient(180deg, #f0f0f0, #f0f0f0 1em, transparent 1em, transparent 1.5em);
+  width: 100%;
+  height: 1em;
+  animation-direction: normal;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-name: blink;
+  animation-timing-function: ease-in-out;
+}
+
+ul.list li .metadata {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ul.list li .version {
+  transition: color 0.2s ease-in-out;
+  color: #ddd;
+}
+
+ul.list li .version:not(:empty):before {
+  content: "v";
+  font-weight: 500;
+}
+
+ul.list li .releaseChannel {
+  padding: 2px;
+  border: 1px solid;
+  text-transform: lowercase;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0.5;
+}
+
+ul.list li .releaseChannel.stable {
+  color: #1ba64e;
+  border-color: #1ba64e;
+}
+
+ul.list li .releaseChannel.daily,
+ul.list li .releaseChannel.develop {
+  color: #f47d20;
+  border-color: #f47d20;
+}
+
+ul.list li .releaseChannel.external {
+  color: #444;
+  border-color: #999;
+}
+
+ul.list li a.appinfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: #000;
+  font-size: 1em;
+  text-align: left;
+  padding: 0.75em 0.5em;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: box-shadow .25s ease-in-out;
+}
+
+ul.list li a.appinfo > span {
+  margin: 5px 0;
+}
+
+ul.list li a.appinfo > span:first-child {
+  margin-top: 0;
+}
+
+ul.list li a.appinfo > span:last-child {
+  margin-bottom: 0;
+}
+
+ul.list li.active a.appinfo,
+ul.list li a.appinfo:active,
+ul.list li a.appinfo:focus,
+ul.list li a.appinfo:hover {
+  border: 1px solid #999;
+  box-shadow: 0 8px 17px 0 rgba(153, 153, 153, 0.2), 0 6px 20px 0 rgba(153, 153, 153, 0.19);
+}
+
+ul.list li.active a.appinfo.stable,
+ul.list li a.appinfo.stable:active,
+ul.list li a.appinfo.stable:focus,
+ul.list li a.appinfo.stable:hover {
+  border: 1px solid #1ba64e;
+  box-shadow: 0 8px 17px 0 rgba(27, 166, 78, 0.2), 0 6px 20px 0 rgba(27, 166, 78, 0.19);
+}
+
+ul.list li.active a.appinfo.daily,
+ul.list li a.appinfo.daily:active,
+ul.list li a.appinfo.daily:focus,
+ul.list li a.appinfo.daily:hover,
+ul.list li.active a.appinfo.develop,
+ul.list li a.appinfo.develop:active,
+ul.list li a.appinfo.develop:focus,
+ul.list li a.appinfo.develop:hover {
+  border: 1px solid #f47d20;
+  box-shadow: 0 8px 17px 0 rgba(244, 125, 32, 0.2), 0 6px 20px 0 rgba(244, 125, 32, 0.19);
+}
+
+ul.list li.active a.appinfo .screenshot,
+ul.list li a.appinfo:active .screenshot,
+ul.list li a.appinfo:focus .screenshot,
+ul.list li a.appinfo:hover .screenshot {
+  background-size: 30%;
+}
+
+ul.list li.active a.appinfo .screenshot.is-set,
+ul.list li a.appinfo:active .screenshot.is-set,
+ul.list li a.appinfo:focus .screenshot.is-set,
+ul.list li a.appinfo:hover .screenshot.is-set {
+  background-size: 110%;
+}
+
+
+ul.list li.active a.appinfo .description,
+ul.list li a.appinfo:active .description,
+ul.list li a.appinfo:focus .description,
+ul.list li a.appinfo:hover .description {
+  color: inherit;
+}
+
+ul.list li.active a.appinfo .version,
+ul.list li a.appinfo:active .version,
+ul.list li a.appinfo:focus .version,
+ul.list li a.appinfo:hover .version {
+  color: #999;
+}
+
+ul.list li.active a.appinfo .releaseChannel,
+ul.list li a.appinfo:active .releaseChannel,
+ul.list li a.appinfo:focus .releaseChannel,
+ul.list li a.appinfo:hover .releaseChannel {
+  opacity: 1;
+}
+
+
+footer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: #999;
+  font-size: 0.8em;
+}
+
+footer ul {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+footer .footer-content {
+  margin: 0.85em 0;
+}
+
+footer a {
+  color: #444;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s ease-in-out;
+}
+
+footer a:active,
+footer a:focus,
+footer a:hover {
+  opacity: 1;
+}
+
+footer ul {
+  display: flex;
+  justify-content: center;
+}
+
+footer ul li:not(:first-child) {
+  margin-left: 3em;
+}
+
+footer ul li img {
+  height: 30px;
+  margin: 0;
+  max-width: 100%;
+}
+
+footer .footer-list-social a {
+  display: flex;
+  align-items: center;
+}
+
+footer .footer-list-social a svg {
+  margin-right: 0.5em;
+}
+
+footer .logo {
+  margin: 0 auto 0.4em;
+}
