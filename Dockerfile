@@ -13,7 +13,7 @@ RUN apk add --update bash \
 RUN ln -sf /dev/stdout /var/log/nginx/access.log
 RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
-ENV EMAIL=samuel.gratzl@datavisyn.io
+ENV EMAIL=bot@caleydo.org
 
 EXPOSE 80
 EXPOSE 443
