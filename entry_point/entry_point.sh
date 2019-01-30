@@ -8,6 +8,10 @@ set -euo pipefail
 rm -rf /usr/share/nginx/html/apps.csv
 domains=""
 while IFS='=' read -r -d '' key value; do
+  if [[ $key == PHOVEA_ENABLE_SSL_LANDING_PAGE ]] ; then
+    echo "Enable SSL for landing page"
+    domains="$domains -d caleydoapp.org"
+  fi
   if [[ $key == PHOVEA_APP_* ]] ; then
     IFS=';'; nameAndDomainAndForward=($value); unset IFS;
     echo Adding application: ${nameAndDomainAndForward[*]}
@@ -24,55 +28,60 @@ while IFS='=' read -r -d '' key value; do
   fi
 done < <(cat /proc/self/environ)
 
-# based on https://github.com/smashwilson/lets-nginx/blob/master/entrypoint.sh
+if ["$domains" = ""] ; then
+  echo "No domains found -> skip SSL setup"
+else
+  echo "Setup SSL certificates"
+  # based on https://github.com/smashwilson/lets-nginx/blob/master/entrypoint.sh
 
-# Generate strong DH parameters for nginx, if they don't already exist.
-if [ ! -f /etc/ssl/dhparams.pem ]; then
-  if [ -f /cache/dhparams.pem ]; then
-    cp /cache/dhparams.pem /etc/ssl/dhparams.pem
-  else
-    openssl dhparam -out /etc/ssl/dhparams.pem 2048
-    # Cache to a volume for next time?
-    if [ -d /cache ]; then
-      cp /etc/ssl/dhparams.pem /cache/dhparams.pem
+  # Generate strong DH parameters for nginx, if they don't already exist.
+  if [ ! -f /etc/ssl/dhparams.pem ]; then
+    if [ -f /cache/dhparams.pem ]; then
+      cp /cache/dhparams.pem /etc/ssl/dhparams.pem
+    else
+      openssl dhparam -out /etc/ssl/dhparams.pem 2048
+      # Cache to a volume for next time?
+      if [ -d /cache ]; then
+        cp /etc/ssl/dhparams.pem /cache/dhparams.pem
+      fi
     fi
   fi
-fi
 
-#create temp file storage
-mkdir -p /var/cache/nginx
-chown nginx:nginx /var/cache/nginx
+  #create temp file storage
+  mkdir -p /var/cache/nginx
+  chown nginx:nginx /var/cache/nginx
 
-mkdir -p /var/tmp/nginx
-chown nginx:nginx /var/tmp/nginx
+  mkdir -p /var/tmp/nginx
+  chown nginx:nginx /var/tmp/nginx
 
-# for testing add the --staging param
-echo "Domains to use: ${domains}"
-echo "certbot certonly -d caleydoapp.org ${domains} \
-  --standalone --text \
-  --email ${EMAIL} --agree-tos \
-  --expand " > /etc/nginx/lets
-  
-  echo "Running initial certificate request... "
-  cat /etc/nginx/lets 
-/bin/bash /etc/nginx/lets
+  # for testing add the --staging param
+  echo "Domains to use: ${domains}"
+  echo "certbot certonly ${domains} \
+    --standalone --text \
+    --email ${EMAIL} --agree-tos \
+    --expand " > /etc/nginx/lets
 
-#Create the renewal directory (containing well-known challenges)
-mkdir -p /etc/letsencrypt/webrootauth/
+    echo "Running initial certificate request... "
+    cat /etc/nginx/lets
+  /bin/bash /etc/nginx/lets
 
-# Template a cronjob to renew certificate with the webroot authenticator
-echo "Creating a cron job to keep the certificate updated"
-  cat <<EOF >/etc/periodic/weekly/renew
+  #Create the renewal directory (containing well-known challenges)
+  mkdir -p /etc/letsencrypt/webrootauth/
+
+  # Template a cronjob to renew certificate with the webroot authenticator
+  echo "Creating a cron job to keep the certificate updated"
+    cat <<EOF >/etc/periodic/weekly/renew
 #!/bin/sh
 # First renew certificate, then reload nginx config
 certbot renew --webroot --webroot-path /etc/letsencrypt/webrootauth/ --post-hook "/usr/sbin/nginx -s reload"
 EOF
 
-chmod +x /etc/periodic/weekly/renew
+  chmod +x /etc/periodic/weekly/renew
 
-# Kick off cron to reissue certificates as required
-# Background the process and log to stderr
-/usr/sbin/crond -f -d 8 &
+  # Kick off cron to reissue certificates as required
+  # Background the process and log to stderr
+  /usr/sbin/crond -f -d 8 &
+fi
 
 echo Ready
 # Launch nginx in the foreground
