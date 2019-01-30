@@ -49,7 +49,7 @@ else
   # if no landing page is set use the first app_domain
   if [[ -z "$landing_page_domain" ]]; then
     landing_page_domain=${app_domains[0]}
-    app_domains[0]="" # clear to avoid duplicates
+    unset app_domains[0] # clear to avoid duplicates
   fi
 
   # activate the ssl_certificate for the landing page in ssl.conf
