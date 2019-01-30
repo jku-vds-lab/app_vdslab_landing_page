@@ -14,7 +14,7 @@ The ngnix server can be configured using the following environment variables (EN
 
 ### Enable SSL for landing page
 
-If the variable `PHOVEA_ENABLE_SSL_LANDING_PAGE` exist a SSL certificate for caleydoapp.org is added. By default no SSL certificate is added.
+If the variable `PHOVEA_ENABLE_SSL_LANDING_PAGE` exists a SSL certificate for caleydoapp.org is added. By default no SSL certificate is added.
 
 
 ### Add phovea app
@@ -39,7 +39,7 @@ The variable `PHOVEA_APPFORWARD_*` adds an app to the landing page only. No ngni
 
 * `<name>`: Name of the app that is visible in the landing page
 * `<domain>`: Subdomain of the app only (e.g., `lineup`)
-* `<forward>`: *Not used*
+* `<forward>`: *Not used.*
 * `<release-channel>`: Release channel can be `stable`, `daily`, or `development` and is indicated on the landing page
 
 Example: `PHOVEA_APPFORWARD_LINEUP=LineUp;lineup;cluster:12345;stable`
