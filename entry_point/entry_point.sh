@@ -33,7 +33,7 @@ while IFS='=' read -r -d '' key value; do
   fi
 done < <(cat /proc/self/environ)
 
-if ["$domains" = ""] ; then
+if [[ -z "$domains" ]]; then
   echo "No domains found -> skip SSL setup"
 else
   echo "Setup SSL certificates"
