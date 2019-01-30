@@ -4,7 +4,12 @@ This repository contains the Dockerfile for creating the caleydoapp.org landing 
 
 ## Configuration
 
-The ngnix server can be configured using environment variables (ENV).
+The ngnix server can be configured using the following environment variables (ENV):
+
+* [`PHOVEA_ENABLE_SSL_LANDING_PAGE`](#enable-ssl-for-landing-page)
+* [`PHOVEA_APP_*`](#add-phovea-app)
+* [`PHOVEA_APPFORWARD_*`](#add-phovea-app-forward)
+* [`PHOVEA_FORWARD_*`](#add-caleydo-subdomain-forward)
 
 
 ### Enable SSL for landing page
