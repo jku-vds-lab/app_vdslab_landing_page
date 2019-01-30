@@ -2,6 +2,8 @@
 
 This repository contains the Dockerfile for creating the caleydoapp.org landing page nginx server. In addition, this server also proxies to the various caleydoapp.org pages based on environment variables.
 
+A Docker image is available at [Docker Hub](https://hub.docker.com/r/caleydo/phovea_landing_page).
+
 ## Configuration
 
 The ngnix server can be configured using the following environment variables (ENV):
@@ -62,10 +64,7 @@ Example: `PHOVEA_FORWARD_LINEUP=LineUp;lineup.caleydo.org;www.caleydo.org/tools/
 
 ## Build Docker image
 
-Run `docker build -t phovea_landing_page .` to build a Docker image.
-
-Afterwards you can push the image to our Docker registry on AWS following [this instructions](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html).
-
+The official [Docker image](https://hub.docker.com/r/caleydo/phovea_landing_page) is build continuously by Docker Hub. Locally you can run `docker build -t phovea_landing_page .` to build a Docker image.
 
 ***
 
