@@ -12,9 +12,14 @@ while IFS='=' read -r -d '' key value; do
     echo "Enable SSL for landing page"
     domains="$domains -d caleydoapp.org"
   fi
+  if [[ $key == PHOVEA_APPFORWARD_* ]] ; then # use APPFORWARD (without space) to avoid conflicts with the `PHOVEA_APP_*` variable
+    IFS=';'; nameAndDomainAndForward=($value); unset IFS;
+    echo "Adding application forward (landing page only): ${nameAndDomainAndForward[*]}"
+    echo $value >> /usr/share/nginx/html/apps.csv
+  fi
   if [[ $key == PHOVEA_APP_* ]] ; then
     IFS=';'; nameAndDomainAndForward=($value); unset IFS;
-    echo Adding application: ${nameAndDomainAndForward[*]}
+    echo "Adding application (landing page + SSL): ${nameAndDomainAndForward[*]}"
     echo $value >> /usr/share/nginx/html/apps.csv
     sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/caleydoapp.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
     cat /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
@@ -22,7 +27,7 @@ while IFS='=' read -r -d '' key value; do
   fi
   if [[ $key == PHOVEA_FORWARD_* ]] ; then
     IFS=';'; nameAndDomainAndForward=($value); unset IFS;
-    echo Adding forward: ${nameAndDomainAndForward[*]}
+    echo "Adding forward: ${nameAndDomainAndForward[*]}"
     sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/forward.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_forward.conf
     cat /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_forward.conf
   fi
@@ -83,7 +88,7 @@ EOF
   /usr/sbin/crond -f -d 8 &
 fi
 
-echo Ready
+echo "Ready"
 # Launch nginx in the foreground
 
 cat /etc/nginx/conf.d/default.conf
