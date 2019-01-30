@@ -3,15 +3,16 @@
 set -euo pipefail
 
 rm -rf /usr/share/nginx/html/apps.csv
-domains=""
+
+landing_page_domain=""
+app_domains="" # array[]
+app_domain_counter=0
 
 while IFS='=' read -r -d '' key value; do
 
   if [[ $key == PHOVEA_ENABLE_SSL_LANDING_PAGE ]] ; then
     echo "Enable SSL for landing page"
-    # activate the ssl_certificate for caleydoapp.org
-    sed -i 's/\#ssl_certificate/ssl_certificate/g' /etc/nginx/conf.d/ssl.conf
-    domains="$domains -d caleydoapp.org"
+    landing_page_domain="caleydoapp.org"
   fi
 
   if [[ $key == PHOVEA_APPFORWARD_* ]] ; then # use APPFORWARD (without space) to avoid conflicts with the `PHOVEA_APP_*` variable
@@ -26,7 +27,8 @@ while IFS='=' read -r -d '' key value; do
     echo $value >> /usr/share/nginx/html/apps.csv
     sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/caleydoapp.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
     cat /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
-    domains="$domains -d ${nameAndDomainAndForward[1]}.caleydoapp.org"
+    app_domains[app_domain_counter]="${nameAndDomainAndForward[1]}.caleydoapp.org"
+    app_domain_counter=`expr $app_domain_counter + 1`
   fi
 
   if [[ $key == PHOVEA_FORWARD_* ]] ; then
@@ -39,10 +41,19 @@ while IFS='=' read -r -d '' key value; do
 done < <(cat /proc/self/environ)
 
 
-if [[ -z "$domains" ]]; then
+if [[ -z "$landing_page_domain" && -z "$app_domains" ]]; then
   echo "No domains found -> skip SSL setup"
 else
   echo "Setup SSL certificates"
+
+  # if no landing page is set use the first app_domain
+  if [[ -z "$landing_page_domain" ]]; then
+    landing_page_domain=${app_domains[0]}
+    app_domains[0]="" # clear to avoid duplicates
+  fi
+
+  # activate the ssl_certificate for the landing page in ssl.conf
+  sed -i "s/\DOMAIN/${landing_page_domain}/g" /etc/nginx/conf.d/ssl.conf
 
   # based on https://github.com/smashwilson/lets-nginx/blob/master/entrypoint.sh
 
@@ -67,8 +78,10 @@ else
   chown nginx:nginx /var/tmp/nginx
 
   # for testing add the --staging param
-  echo "Domains to use: ${domains}"
-  echo "certbot certonly ${domains} \
+  echo "Landing page domain: ${app_domains[*]}"
+  echo "Other domains: ${app_domains[*]}"
+  command="${landing_page_domain/#/-d } ${app_domains[*]/#/-d }" # prefix with domain with `-d `
+  echo "certbot certonly ${command} \
     --standalone --text \
     --email ${EMAIL} --agree-tos \
     --expand " > /etc/nginx/lets
