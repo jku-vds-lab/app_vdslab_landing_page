@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-# PHOVEA_APP_NAME=Name;domain;forward
-# PHOVEA_FORWARD_NAME=domain;forward
-# matches PHOVEA_APP_LINEUP=LineUp;lineup
 rm -rf /usr/share/nginx/html/apps.csv
 domains=""
 while IFS='=' read -r -d '' key value; do
