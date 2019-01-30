@@ -2,12 +2,6 @@
 
 This repository contains the Dockerfile for creating the caleydoapp.org landing page nginx server. In addition, this server also proxies to the various caleydoapp.org pages based on environment variables.
 
-***
-
-<a href="https://caleydo.org"><img src="http://caleydo.org/assets/images/logos/caleydo.svg" align="left" width="200px" hspace="10" vspace="6"></a>
-This repository is part of **[Phovea](http://phovea.caleydo.org/)**, a platform for developing web-based visualization apps. For tutorials, API docs, and more information about the build and deployment process, see the [documentation page](http://caleydo.org/documentation/).
-
-
 ## Configuration
 
 The ngnix server can be configured using environment variables (ENV).
@@ -15,7 +9,7 @@ The ngnix server can be configured using environment variables (ENV).
 
 ### Enable SSL for landing page
 
-If the variable `PHOVEA_ENABLE_SSL_LANDING_PAGE` exist a SSL certificate for caleydoapp.org is added. Default: no SSL certificate is added.
+If the variable `PHOVEA_ENABLE_SSL_LANDING_PAGE` exist a SSL certificate for caleydoapp.org is added. By default no SSL certificate is added.
 
 
 ### Add phovea app
@@ -66,6 +60,12 @@ Example: `PHOVEA_FORWARD_LINEUP=LineUp;lineup.caleydo.org;www.caleydo.org/tools/
 Run `docker build -t phovea_landing_page .` to build a Docker image.
 
 Afterwards you can push the image to our Docker registry on AWS following [this instructions](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html).
+
+
+***
+
+<a href="https://caleydo.org"><img src="http://caleydo.org/assets/images/logos/caleydo.svg" align="left" width="200px" hspace="10" vspace="6"></a>
+This repository is part of **[Phovea](http://phovea.caleydo.org/)**, a platform for developing web-based visualization apps. For tutorials, API docs, and more information about the build and deployment process, see the [documentation page](http://caleydo.org/documentation/).
 
 
 [phovea-image]: https://img.shields.io/badge/Phovea-DevTools-lightgrey.svg
