@@ -36,6 +36,9 @@ while IFS='=' read -r -d '' key value; do
     echo "Adding forward: ${nameAndDomainAndForward[*]}"
     sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/forward.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_forward.conf
     cat /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_forward.conf
+    # Add forwards to app_domains to get certificates:
+    app_domains[app_domain_counter]="${nameAndDomainAndForward[1]}" # is a separate domain --> no caleydoapp suffix
+    app_domain_counter=`expr $app_domain_counter + 1`
   fi
 
 done < <(cat /proc/self/environ)
@@ -78,8 +81,10 @@ else
   chown nginx:nginx /var/tmp/nginx
 
   # for testing add the --staging param
-  echo "Landing page domain: ${app_domains[*]}"
-  echo "Other domains: ${app_domains[*]}"
+  echo "Landing page domain: ${landing_page_domain}"
+  echo "Other domains:"
+  printf '\t%s\n' "${app_domains[@]}"
+
   command="${landing_page_domain/#/-d } ${app_domains[*]/#/-d }" # prefix with domain with `-d `
   echo "certbot certonly ${command} \
     --standalone --text \
