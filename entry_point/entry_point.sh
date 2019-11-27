@@ -109,11 +109,13 @@ else
   mkdir -p /etc/letsencrypt/webrootauth/
 
   # Template a cronjob to renew certificate with the webroot authenticator
+  # Certificates are checked every week and renewed if they expire in less than 30 days.
+  # See: https://certbot.eff.org/docs/using.html#renewing-certificates
   echo "Creating a cron job to keep the certificate updated"
     cat <<EOF >/etc/periodic/weekly/renew
 #!/bin/sh
-# First renew certificate, then reload nginx config
-certbot renew --webroot --webroot-path /etc/letsencrypt/webrootauth/ --post-hook "/usr/sbin/nginx -s reload"
+# First renew certificate, then reload nginx config if succesful
+certbot renew --webroot --webroot-path /etc/letsencrypt/webrootauth/ --deploy-hook "/usr/sbin/nginx -s reload"
 EOF
 
   chmod +x /etc/periodic/weekly/renew
