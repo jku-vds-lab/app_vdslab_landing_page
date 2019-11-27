@@ -97,7 +97,7 @@ else
   echo "certbot certonly ${command} \
     --non-interactive \
     --force-renewal \
-    --standalone --text \
+    --standalone \
     --email ${EMAIL} \
     --agree-tos " > /etc/nginx/lets
 
