@@ -80,16 +80,26 @@ else
   mkdir -p /var/tmp/nginx
   chown nginx:nginx /var/tmp/nginx
 
-  # for testing add the --staging param
   echo "Landing page domain: ${landing_page_domain}"
   echo "Other domains:"
   printf '\t%s\n' "${app_domains[@]}"
 
+  # Build the certbot command
+  # domains
   command="${landing_page_domain/#/-d } ${app_domains[*]/#/-d }" # prefix with domain with `-d `
+  # non-interactive: Run without ever asking for user input
+  # force renewal: Renew certificate, even if there is one. Also implies --expand. Used instead of keep because I think the certificate is not always available in the container (e.g. when a new container is created).
+  # standalone: certbot will run a webserver
+  # email: contact info in certificate
+  # agree-tos: dont ask on stdin if we agree TOS
+  # Note: for testing add the --staging param
+  # Also see: https://certbot.eff.org/docs/using.html#certbot-command-line-options
   echo "certbot certonly ${command} \
+    --non-interactive \
+    --force-renewal \
     --standalone --text \
-    --email ${EMAIL} --agree-tos \
-    --expand " > /etc/nginx/lets
+    --email ${EMAIL} \
+    --agree-tos " > /etc/nginx/lets
 
     echo "Running initial certificate request... "
     cat /etc/nginx/lets
