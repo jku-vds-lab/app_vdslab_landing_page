@@ -7,8 +7,8 @@ services:
     ports:
       - '80:80'
     environment:
-      - PHOVEA_APP_LINEUP=LineUp;lineup;lineup;stable
-      - PHOVEA_APPFORWARD_LINEUP=LineUp;lineup;lineup;daily
-      - PHOVEA_FORWARD_LINEUP=LineUp;lineup.caleydo.org;www.caleydo.org/tools/lineup
+      - JKUVDSLAB_APP_LINEUP=LineUp;lineup;lineup;stable
+      - JKUVDSLAB_APPFORWARD_LINEUP=LineUp;lineup;lineup;daily
+      - JKUVDSLAB_FORWARD_LINEUP=LineUp;lineup.caleydo.org;www.caleydo.org/tools/lineup
   lineup:
     image: nginx:latest

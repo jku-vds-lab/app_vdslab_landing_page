@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Caleydo Apps",
-  "short_name": "Caleydo Apps",
+  "name": "JKU VDS Lab Apps",
+  "short_name": "JKU VDS Lab Apps",
   "version": "1.0",
   "default_locale": "en",
   "background_color": "#ffffff",

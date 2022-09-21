@@ -10,28 +10,28 @@ app_domain_counter=0
 
 while IFS='=' read -r -d '' key value; do
 
-  if [[ $key == PHOVEA_ENABLE_SSL_LANDING_PAGE ]] ; then
+  if [[ $key == JKUVDSLAB_ENABLE_SSL_LANDING_PAGE ]] ; then
     echo "Enable SSL for landing page"
-    landing_page_domain="caleydoapp.org"
+    landing_page_domain="app.jku-vds-lab.at"
   fi
 
-  if [[ $key == PHOVEA_APPFORWARD_* ]] ; then # use APPFORWARD (without space) to avoid conflicts with the `PHOVEA_APP_*` variable
+  if [[ $key == JKUVDSLAB_APPFORWARD_* ]] ; then # use APPFORWARD (without space) to avoid conflicts with the `PHOVEA_APP_*` variable
     IFS=';'; nameAndDomainAndForward=($value); unset IFS;
     echo "Adding application forward (landing page only): ${nameAndDomainAndForward[*]}"
     echo $value >> /usr/share/nginx/html/apps.csv
   fi
 
-  if [[ $key == PHOVEA_APP_* ]] ; then
+  if [[ $key == JKUVDSLAB_APP_* ]] ; then
     IFS=';'; nameAndDomainAndForward=($value); unset IFS;
     echo "Adding application (landing page + SSL): ${nameAndDomainAndForward[*]}"
     echo $value >> /usr/share/nginx/html/apps.csv
-    sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/caleydoapp.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
+    sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/appjkuvdslab.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
     cat /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_app.conf
-    app_domains[app_domain_counter]="${nameAndDomainAndForward[1]}.caleydoapp.org"
+    app_domains[app_domain_counter]="${nameAndDomainAndForward[1]}.app.jku-vds-lab.at"
     app_domain_counter=`expr $app_domain_counter + 1`
   fi
 
-  if [[ $key == PHOVEA_FORWARD_* ]] ; then
+  if [[ $key == JKUVDSLAB_FORWARD_* ]] ; then
     IFS=';'; nameAndDomainAndForward=($value); unset IFS;
     echo "Adding forward: ${nameAndDomainAndForward[*]}"
     sed -e s#DOMAIN#"${nameAndDomainAndForward[1]}"#g -e s#FORWARD#"${nameAndDomainAndForward[2]}"#g /phovea/templates/forward.in.conf > /etc/nginx/conf.d/${nameAndDomainAndForward[1]}_forward.conf

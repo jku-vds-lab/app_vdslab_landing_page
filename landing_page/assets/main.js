@@ -193,7 +193,7 @@
         if (url.includes('//')) {
           return url;
         }
-        return `//${url}.caleydoapp.org`;
+        return `//${url}.app.jku-vds-lab.at`;
       };
       const list = appList
         .split('\n')
